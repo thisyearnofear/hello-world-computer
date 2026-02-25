@@ -3,17 +3,14 @@
 import {
   Menu,
   MessageSquare,
-  Sparkles,
-  Coins,
-  Globe,
-  Rocket,
+  Home,
+  User,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { eventBus, EVENTS } from '@/lib/events';
 import { getAnimationStyle } from '@/lib/styles/style-utils';
 
 export function MobileNavigation() {
@@ -25,23 +22,17 @@ export function MobileNavigation() {
     return null;
   }
 
-  const triggerActionPrompt = (category: string, message: string) => {
-    // If we're not on the home page, navigate there first
-    if (window.location.pathname !== '/') {
-      // Navigate to home page
-      router.push('/');
-
-      // Wait for navigation to complete before sending the message
-      setTimeout(() => {
-        eventBus.emit(EVENTS.SEND_CHAT_MESSAGE, { message, category });
-      }, 500);
-    } else {
-      // Already on home page, just send the message immediately
-      eventBus.emit(EVENTS.SEND_CHAT_MESSAGE, { message, category });
-    }
-  };
-
   const navItems = [
+    {
+      name: 'Home',
+      icon: Home,
+      action: () => router.push('/'),
+    },
+    {
+      name: 'Chat',
+      icon: MessageSquare,
+      action: () => router.push('/chat'),
+    },
     {
       name: 'Menu',
       icon: Menu,
@@ -49,51 +40,9 @@ export function MobileNavigation() {
       primary: true,
     },
     {
-      name: 'New Chat',
-      icon: MessageSquare,
-      action: () => router.push('/'),
-    },
-
-    {
-      name: 'Starter Kits',
-      icon: Sparkles,
-      action: () => router.push('/starter-kits'),
-    },
-    {
-      name: 'Get USDbC',
-      icon: Rocket,
-      action: () =>
-        triggerActionPrompt(
-          'BASE',
-          'I want to get USD-backed stablecoins on Base. Can you help me directly in this chat?',
-        ),
-    },
-    {
-      name: 'Get EURA',
-      icon: Rocket,
-      action: () =>
-        triggerActionPrompt(
-          'OPTIMISM',
-          'I want to get Euro-backed stablecoins on Optimism. Can you help me directly in this chat?',
-        ),
-    },
-    {
-      name: 'Get cUSD',
-      icon: Coins,
-      action: () =>
-        triggerActionPrompt(
-          'CELO',
-          'I want to get USD-backed stablecoins on Celo. Can you help me directly in this chat?',
-        ),
-    },
-    {
-      name: 'Social',
-      icon: Globe,
-      action: () =>
-        triggerActionPrompt(
-          'SOCIAL',
-          'Show me social actions like Farcaster and Lens that I can set up directly in this chat.',
-        ),
+      name: 'Profile',
+      icon: User,
+      action: () => router.push('/profile'),
     },
   ];
 
@@ -129,13 +78,7 @@ export function MobileNavigation() {
                     ? 200
                     : index === 3
                       ? 300
-                      : index === 4
-                        ? 400
-                        : index === 5
-                          ? 500
-                          : index === 6
-                            ? 500
-                            : undefined,
+                      : undefined,
               ),
             )}
             onClick={() => {

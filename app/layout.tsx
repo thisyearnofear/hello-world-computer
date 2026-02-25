@@ -20,9 +20,9 @@ import '@coinbase/onchainkit/styles.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chat.vercel.ai'),
+  metadataBase: new URL('https://stablestation.xyz'),
   title: 'Stable Station',
-  description: 'Hub for Stablecoins & Real World Assets',
+  description: 'Your hub for stablecoins and real world assets. Diversify across regions, chains, and currencies.',
 };
 
 export const viewport = {
