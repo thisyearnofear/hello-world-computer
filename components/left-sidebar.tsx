@@ -44,17 +44,17 @@ export function LeftSidebar() {
   const isInChat = pathname?.startsWith('/chat/');
 
   const triggerActionPrompt = (category: string, message: string) => {
-    // If we're not in a chat, navigate to home first
-    if (!isInChat && pathname !== '/') {
-      // Navigate to home page
-      router.push('/');
+    // If we're not in a chat, navigate to /chat first
+    if (!isInChat && pathname !== '/chat') {
+      // Navigate to chat page
+      router.push('/chat');
 
       // Wait for navigation to complete before sending the message
       setTimeout(() => {
         eventBus.emit(EVENTS.SEND_CHAT_MESSAGE, { message, category });
       }, 500);
     } else {
-      // Already in a chat or on home page, just send the message immediately
+      // Already in a chat, just send the message immediately
       eventBus.emit(EVENTS.SEND_CHAT_MESSAGE, { message, category });
     }
 
@@ -79,7 +79,7 @@ export function LeftSidebar() {
             asChild
             className="bg-blue-50 dark:bg-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700 text-blue-600 dark:text-blue-100"
           >
-            <Link href="/" onClick={() => setOpenMobile(false)}>
+            <Link href="/chat" onClick={() => setOpenMobile(false)}>
               <Plus className="text-blue-600 dark:text-blue-100" />
               New Chat
             </Link>
@@ -131,14 +131,26 @@ export function LeftSidebar() {
 
           {/* Available Tokens */}
           {availableTokens.map((token) => {
-            // Map chain to color
-            const colorMap: Record<string, string> = {
-              BASE: 'blue',
-              OPTIMISM: 'purple',
-              CELO: 'yellow',
-              POLYGON: 'indigo',
+            // Use static Tailwind classes instead of dynamic interpolation
+            const chainStyles: Record<string, { bg: string; icon: string }> = {
+              BASE: {
+                bg: 'bg-blue-50 dark:bg-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700 text-blue-600 dark:text-blue-100',
+                icon: 'text-blue-600 dark:text-blue-100',
+              },
+              OPTIMISM: {
+                bg: 'bg-purple-50 dark:bg-purple-800 hover:bg-purple-100 dark:hover:bg-purple-700 text-purple-600 dark:text-purple-100',
+                icon: 'text-purple-600 dark:text-purple-100',
+              },
+              CELO: {
+                bg: 'bg-yellow-50 dark:bg-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-700 text-yellow-600 dark:text-yellow-100',
+                icon: 'text-yellow-600 dark:text-yellow-100',
+              },
+              POLYGON: {
+                bg: 'bg-indigo-50 dark:bg-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-700 text-indigo-600 dark:text-indigo-100',
+                icon: 'text-indigo-600 dark:text-indigo-100',
+              },
             };
-            const color = colorMap[token.chain] || 'blue';
+            const styles = chainStyles[token.chain] || chainStyles.BASE;
 
             return (
               <SidebarMenuButton
@@ -150,9 +162,9 @@ export function LeftSidebar() {
                       `I want to get ${token.symbol} stablecoins. Can you help me directly in this chat?`,
                   )
                 }
-                className={`bg-${color}-50 dark:bg-${color}-800 hover:bg-${color}-100 dark:hover:bg-${color}-700 text-${color}-600 dark:text-${color}-100`}
+                className={styles.bg}
               >
-                <Coins className={`text-${color}-600 dark:text-${color}-100`} />
+                <Coins className={styles.icon} />
                 Get {token.symbol}
               </SidebarMenuButton>
             );
